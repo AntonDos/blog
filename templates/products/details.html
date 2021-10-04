@@ -1,0 +1,44 @@
+<!-- posts.html -->
+{% extends "base.html" %}
+
+{% block title %}Posts page{% endblock %}
+
+{% block content %}
+<div id="product-details">
+  <h1 class="mb-4">{{ product.name }}</h1>
+  <div class="row">
+    <div class="col-4">
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-100">
+    </div>
+    <div class="col-8">
+      <h3 class="mb-2 text-muted">Cost: {{ product.price }}</h3>
+      <h3 class="mb-2 text-muted">Status: {{ product.get_status_display }}</h3>
+      <p>{{ product.description }}</p>
+
+      {% if product.purchases.exists %}
+        <p>
+          Users previously purchased this product:
+          <ul>
+            {% for purchase in product.purchases.all %}
+              <li>{{ purchase.user.username }}</li>
+            {% endfor %}
+          </ul>
+        </p>
+      {% endif %}
+
+      {% if user.is_authenticated %}
+        <form method="POST" class="mt-4">
+          {% csrf_token %}
+          {% if is_product_in_favorites %}
+            <input type="hidden" name="action" value="delete">
+            <button type="submit" class="delete btn btn-primary">Delete from favorites</button>
+          {% else %}
+            <input type="hidden" name="action" value="add">
+            <button type="submit" class="add btn btn-primary">Add to favorites</button>
+          {% endif %}
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
