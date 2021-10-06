@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.db.models import F, Sum
 from django.shortcuts import render
 
@@ -10,8 +11,6 @@ def products_view(request):
     filters_form = ProductFiltersForm(request.GET)
 
     if filters_form.is_valid():
-        if filters_form.cleaned_data["status"]:
-            products = products.filter(status=filters_form.cleaned_data["status"])
         if filters_form.cleaned_data["price__gt"]:
             products = products.filter(price__gt=filters_form.cleaned_data["price__gt"])
         if filters_form.cleaned_data["price__lt"]:
@@ -31,6 +30,10 @@ def products_view(request):
                 products = products.annotate(
                     total_price=Sum("purchases__count") * F("price")
                 ).order_by("-total_price")
+
+    paginator = Paginator(products, 3)
+    page_number = request.GET.get("page")
+    products = paginator.get_page(page_number)
 
     return render(
         request,

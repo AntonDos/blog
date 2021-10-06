@@ -1,7 +1,7 @@
 <!-- products/list.html -->
 {% extends "base.html" %}
 
-{% load static crispy_forms_tags %}
+{% load static crispy_forms_tags pagination_tags %}
 
 {% block title %}Products{% endblock %}
 
@@ -23,6 +23,21 @@
           </div>
         {% endfor %}
       </div>
+    </div>
+    <div class="pagination my-3">
+      <span class="step-links">
+        {% if products.has_previous %}
+          <a href="{% url_replace page=1 %}" class="btn btn-primary">&laquo; first</a>
+          <a href="{% url_replace page=products.previous_page_number %}" class="btn btn-primary">previous</a>
+        {% endif %}
+          <span class="current">
+              Page {{ products.number }} of {{ products.paginator.num_pages }}.
+          </span>
+        {% if products.has_next %}
+          <a href="{% url_replace page=products.next_page_number %}" class="btn btn-primary">next</a>
+          <a href="{% url_replace page=products.paginator.num_pages %}" class="btn btn-primary">last &raquo;</a>
+        {% endif %}
+        </span>
     </div>
   </div>
 {% endblock %}
