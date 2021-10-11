@@ -23,6 +23,9 @@ class Product(models.Model):
         settings.AUTH_USER_MODEL, related_name="favorite_products"
     )
 
+    class Meta:
+        ordering = ["id"]
+
     def __str__(self):
         return f"{self.name} - {self.price}"
 
@@ -33,6 +36,7 @@ class Purchase(models.Model):
         Product, related_name="purchases", on_delete=models.CASCADE
     )
     count = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):
         return f"{self.user} - {self.product} - {self.count}"

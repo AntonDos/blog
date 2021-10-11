@@ -16,17 +16,19 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 
-from posts.views import index, register
-from shop.views import products_view, product_details_view
+from blog.views import register_view
+from posts.views import index_view
+from shop.views import ProductsView, product_details_view, PurchaseView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index, name="index_view"),
-    path("register/", register, name="register_view"),
-    path("products/", products_view, name="products_view"),
+    path("posts/", index_view, name="index_view"),
+    path("register/", register_view, name="register_view"),
+    path("", ProductsView.as_view(), name="products_view"),
     path(
         "product/<int:product_id>/", product_details_view, name="product_details_view"
     ),
+    path("purchases/", PurchaseView.as_view(), name="purchases_view"),
     path("api/", include("api.urls", namespace="api")),
 ]
 

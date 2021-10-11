@@ -1,15 +1,20 @@
 from rest_framework import viewsets
 
+from api.products.serializers import ProductSerializer, ProductFiltersSerializer
+from shop.models import Product
+from shop.services import filter_products
 
-from api.posts.serializers import PostSerializer
-from posts.models import Post
 
-
-class PostViewSet(viewsets.ModelViewSet):
+class ProductViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows posts to be viewed.
+    API endpoint that allows products to be viewed.
     """
 
-    queryset = Post.objects.all().order_by("-created_at")
-    serializer_class = PostSerializer
+    queryset = Product.objects.all().order_by("-price")
+    serializer_class = ProductSerializer
     permission_classes = []
+
+    def filter_queryset(self, queryset):
+        filter_serializer = ProductFiltersSerializer(data=self.request.query_params)
+        filter_serializer.is_valid(raise_exception=True)
+        return filter_products(queryset, **filter_serializer.validated_data)
