@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'posts',
     'shop',
-    'django-rq',
+    'django_rq',
 ]
 
 MIDDLEWARE = [
